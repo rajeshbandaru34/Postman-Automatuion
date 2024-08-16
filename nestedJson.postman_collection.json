@@ -1,0 +1,361 @@
+{
+	"info": {
+		"_postman_id": "1dd88253-a1ab-4946-bdcc-bbd8a7aae6e1",
+		"name": "nestedJson",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28909121",
+		"_collection_link": "https://puls77.postman.co/workspace/Postman_Automation~afa490e0-15ec-43d3-bb40-b5cd6799cd1d/collection/28909121-1dd88253-a1ab-4946-bdcc-bbd8a7aae6e1?action=share&source=collection_link&creator=28909121"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsondata = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Response structure validation\", function(){\r",
+							"    if(jsondata){\r",
+							"  pm.expect(jsondata).to.have.property('response');\r",
+							"  pm.expect(jsondata.response).to.be.an('array');\r",
+							"    }\r",
+							"    else\r",
+							"    {\r",
+							"        console.error(\"jsondata is not there\")\r",
+							"    }\r",
+							"})\r",
+							"\r",
+							"if(jsondata){\r",
+							"    pm.test(\"Properties Verification\", function(){\r",
+							"        //console.log(jsondata);\r",
+							"        const  jsonObject = jsondata.response.find(m => m.first_name === \"jhbhb\");\r",
+							"        //const phone_code = pm.jsondata.response.find(m => m.phone_code===\"100\");\r",
+							"        console.log(jsonObject);\r",
+							"        pm.expect(jsonObject).to.not.be.undefined;\r",
+							"        //pm.expect(phone_code).to.not.be.undefined;\r",
+							"\r",
+							"        pm.expect(jsonObject.last_name).to.equal(\"fgregher\");\r",
+							"    })\r",
+							"    }else{\r",
+							"        console.error(\"jsondata.response is undefined or not an array\")\r",
+							"    }\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessTokenUrl",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "password_credentials",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "http://43.205.83.99:8005/api/customers?id=165",
+					"protocol": "http",
+					"host": [
+						"43",
+						"205",
+						"83",
+						"99"
+					],
+					"port": "8005",
+					"path": [
+						"api",
+						"customers"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "165"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Response Validation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsondata = pm.response.json();\r",
+							"const expectemails = [\"michael.lawson@reqres.in\",\"lindsay.ferguson@reqres.in\", \"tobias.funke@reqres.in\", \"byron.fields@reqres.in\", \"george.edwards@reqres.in\", \"rachel.howell@reqres.in\" ];\r",
+							"const Actualemails=[];\r",
+							"\r",
+							"// Log the JSON response for debugging\r",
+							"console.log(jsondata);\r",
+							"\r",
+							"// Add a test case to verify the presence of 'data'\r",
+							"pm.test(\"Response structure validation\", function() {\r",
+							"    pm.expect(jsondata).to.have.property('data');\r",
+							"    pm.expect(jsondata.data).to.be.an('array');\r",
+							"});\r",
+							"\r",
+							"// Only run the following test if 'data' is an array\r",
+							"if (jsondata.data && Array.isArray(jsondata.data)) {\r",
+							"    pm.test(\"Properties Verification\", function() {\r",
+							"        const last_nameObject = jsondata.data.find(m => m.last_name === \"Fields\");\r",
+							"        // Check if the object with last_name \"Fields\" exists\r",
+							"        pm.expect(last_nameObject).to.not.be.undefined;\r",
+							"        // Verify the object has all the required keys\r",
+							"        pm.expect(last_nameObject).to.have.all.keys(\"last_name\", \"first_name\", \"email\", \"id\", \"avatar\");\r",
+							"        pm.expect(last_nameObject.first_name).to.equal(\"Byron\");\r",
+							"        pm.expect(last_nameObject.email).to.equal(\"byron.fields@reqres.in\");\r",
+							"        pm.expect(last_nameObject.avatar).to.equal(\"https://reqres.in/img/faces/10-image.jpg\");\r",
+							"    });\r",
+							"} else {\r",
+							"    console.error(\"The structure of the JSON response is not as expected.\");\r",
+							"    // Optionally, you can fail the test if the structure is not as expected\r",
+							"    pm.test(\"Unexpected response structure\", function() {\r",
+							"        pm.expect.fail(\"The structure of the JSON response is not as expected.\");\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							"//Sum of all id's in the api\r",
+							"pm.test(\"Sum of id's\" , ()=>{\r",
+							"\r",
+							"    let sumOfIds = 0;\r",
+							"     // Iterate over the 'data' array and sum the 'id' values\r",
+							"    jsondata.data.forEach(item => { sumOfIds += item.id;} );\r",
+							"    console.log(\"Sum of id's: \" + sumOfIds);  // Log the sum of ids\r",
+							"})\r",
+							"\r",
+							"//validate the emails in all records\r",
+							"// Iterate over each object in jsondata.data\r",
+							"pm.test(\"Validate the emails in all records\", function() {\r",
+							"    jsondata.data.forEach(function(item) {\r",
+							"        // Push each email from the response into the Actualemails array\r",
+							"        Actualemails.push(item.email);\r",
+							"    });\r",
+							"\r",
+							"    // Assert that the actual emails array matches the expected emails array\r",
+							"    console.log(Actualemails);\r",
+							"    pm.expect(Actualemails).to.eql(expectemails);\r",
+							"});\r",
+							" \r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "grant_type",
+							"value": "password_credentials",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin@accelyzei.com",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "http://43.205.83.99:8005/api/login",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://reqres.in/api/users?page=2",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "jsonSchemaValidation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonSchema = {\r",
+							"    \r",
+							"\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"data\": {\r",
+							"      \"type\": \"object\",\r",
+							"      \"properties\": {\r",
+							"        \"id\": {\r",
+							"          \"type\": \"integer\"\r",
+							"        },\r",
+							"        \"email\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"first_name\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"last_name\": {\r",
+							"          \"type\": \"string\"\r",
+							"        },\r",
+							"        \"avatar\": {\r",
+							"          \"type\": \"string\"\r",
+							"        }\r",
+							"      },\r",
+							"      \"required\": [\r",
+							"        \"id\",\r",
+							"        \"email\",\r",
+							"        \"first_name\",\r",
+							"        \"last_name\",\r",
+							"        \"avatar\"\r",
+							"      ]\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"data\"\r",
+							"  ]\r",
+							"}\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the jsonSchema\", ()=>{\r",
+							"    pm.response.to.have.jsonSchema(jsonSchema);\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://reqres.in/api/users?id=1",
+					"protocol": "https",
+					"host": [
+						"reqres",
+						"in"
+					],
+					"path": [
+						"api",
+						"users"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

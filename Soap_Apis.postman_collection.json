@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "a9472fe3-7c9a-403d-b172-a85ad9c5aeb7",
+		"name": "Soap_Apis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28909121",
+		"_collection_link": "https://puls77.postman.co/workspace/Postman_Automation~afa490e0-15ec-43d3-bb40-b5cd6799cd1d/collection/28909121-a9472fe3-7c9a-403d-b172-a85ad9c5aeb7?action=share&source=collection_link&creator=28909121"
+	},
+	"item": [
+		{
+			"name": "numberToWordsConvterUsingCSV",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//validate the response\r",
+							"\r",
+							"const responsebody = xml2Json(pm.response.text());\r",
+							"console.log(responsebody);\r",
+							"const ActualValue = responsebody[\"soap:Envelope\"][\"soap:Body\"][\"m:NumberToWordsResponse\"][\"m:NumberToWordsResult\"];\r",
+							"console.log(ActualValue);\r",
+							"\r",
+							"pm.test(pm.globals.get(\"Test\"), function(){\r",
+							" pm.expect(pm.collectionVariables.get(\"newActualNum\")).to.be.equal(ActualValue);\r",
+							"});\r",
+							"\r",
+							"//Validate the Parsing the response\r",
+							"pm.test(\"Parsing the response\", function(){\r",
+							"pm.expect(pm.response.text()).to.be.include(pm.collectionVariables.get(\"newActualNum\"));\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"newnum\", pm.iterationData.get(\"newnum\"));\r",
+							"pm.collectionVariables.set(\"newActualNum\", pm.iterationData.get(\"newActualNum\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/soap+xml; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<soap12:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">\r\n  <soap12:Body>\r\n    <NumberToWords xmlns=\"http://www.dataaccess.com/webservicesserver/\">\r\n      <ubiNum>{{newnum}}</ubiNum>\r\n    </NumberToWords>\r\n  </soap12:Body>\r\n</soap12:Envelope>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{SoapbaseUrl}}/webservicesserver/NumberConversion.wso",
+					"host": [
+						"{{SoapbaseUrl}}"
+					],
+					"path": [
+						"webservicesserver",
+						"NumberConversion.wso"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Number",
+			"value": "4001",
+			"type": "string"
+		},
+		{
+			"key": "actualNum",
+			"value": "four thousand one",
+			"type": "string"
+		},
+		{
+			"key": "newnum",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "newActualNum",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

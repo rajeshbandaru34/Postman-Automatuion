@@ -1,0 +1,415 @@
+{
+	"info": {
+		"_postman_id": "447ef57a-3b7b-40b2-9643-b04d3de23923",
+		"name": "TEST API's",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28909121",
+		"_collection_link": "https://puls77.postman.co/workspace/Postman_Automation~afa490e0-15ec-43d3-bb40-b5cd6799cd1d/collection/28909121-447ef57a-3b7b-40b2-9643-b04d3de23923?action=share&source=collection_link&creator=28909121"
+	},
+	"item": [
+		{
+			"name": "Post Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Assertions validations - response\r",
+							"const jsondata = pm.response.json();\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate Status Code is 200\",function()\r",
+							"{\r",
+							"\r",
+							"\t//Validate the response code\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"\t\t// Validate the propery key is there in the body\r",
+							"    pm.expect(jsondata).have.property(\"Msg\");\r",
+							"\r",
+							"\t\t//Validate response text  \r",
+							"    pm.expect(jsondata.Msg).to.eql(\"successfully added\");\r",
+							"    \r",
+							"\r",
+							"\t\t // Validate response time is within an acceptable range (e.g., less than 200ms)\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+							"\r",
+							"\t\t// Validate response text \r",
+							"\t\tpm.expect(pm.response.text()).to.include(\"successfully added\");\r",
+							"\r",
+							"        //Length validation\r",
+							"\t\t pm.expect(Response_body[0].aisle).to.have.lengthOf(1);\r",
+							"}\r",
+							")\r",
+							"\r",
+							"\r",
+							"//Assertions validations - headers\r",
+							"pm.test(\"Headers, Cookies, and Response Time Validation\", ()=> {\r",
+							"    // Validate the presence of a specific header\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"\r",
+							"    // Validate the content of a specific header against a variable\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json;charset=UTF-8\");\r",
+							"\r",
+							"//\tCheck if text is there in \r",
+							"    // Check if cookies are present (example: \"session_id\" cookie)\r",
+							"    //var cookie = pm.cookies.get(\"session_id\");\r",
+							"    //pm.expect(cookie).to.not.be.undefined;\r",
+							"})\r",
+							"\r",
+							"//Store the response data in the collection variable\r",
+							"const Book_ID= jsondata.ID;\r",
+							"console.log(Book_ID);\r",
+							"pm.collectionVariables.set(\"bookiD\", Book_ID);\r",
+							"\r",
+							"//Validate the JSON Schema\r",
+							"const JSONSchema = {\r",
+							"  \"title\": \"Generated schema for Root\",\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"Msg\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"ID\": {\r",
+							"      \"type\": \"string\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"Msg\",\r",
+							"    \"ID\"\r",
+							"  ]\r",
+							"}\r",
+							"pm.test(\"Validate the JSON Response Schema\", ()=>\r",
+							"{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.have.jsonSchema(JSONSchema);\r",
+							"}\r",
+							")"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n\"name\":\"{{Name}}\",\r\n\"isbn\":\"fgutfgvi\",//{{isbn}},\r\n\"aisle\":\"{{aisle}}\",\r\n\"author\":\"{{authorName}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rahulshettyacademy.com/Library/Addbook.php?ContentTypeOne=application/json;charset=UTF-8",
+					"protocol": "https",
+					"host": [
+						"rahulshettyacademy",
+						"com"
+					],
+					"path": [
+						"Library",
+						"Addbook.php"
+					],
+					"query": [
+						{
+							"key": "ContentTypeOne",
+							"value": "application/json;charset=UTF-8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payload From CSV File",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"//RS454564\r",
+							"console.log(pm.globals.get(\"CompanyCode\"));\r",
+							"const code= pm.globals.get(\"CompanyCode\");\r",
+							"const value = pm.variables.replaceIn('{{$randomInt}}');\r",
+							"console.log(value);\r",
+							"const Concat = code+value;\r",
+							"pm.collectionVariables.set(\"isbn\", Concat);\r",
+							"pm.collectionVariables.set(\"authorName\",pm.iterationData.get(\"Author\"));\r",
+							"pm.collectionVariables.set(\"BookName\", pm.iterationData.get(\"BookName\"));\r",
+							"pm.collectionVariables.set(\"aisle\", \"0\");\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Assertions validations - response\r",
+							"const jsondata = pm.response.json();\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate Status Code is 200\",function()\r",
+							"{\r",
+							"\r",
+							"\t//Validate the response code\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"\t\t// Validate the propery key is there in the body\r",
+							"    pm.expect(jsondata).have.property(\"Msg\");\r",
+							"\r",
+							"\t\t//Validate response text  \r",
+							"    pm.expect(jsondata.Msg).to.eql(\"successfully added\")\r",
+							"\r",
+							"\t\t // Validate response time is within an acceptable range (e.g., less than 200ms)\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+							"\r",
+							"\t\t// Validate response text \r",
+							"\t\tpm.expect(pm.response.text()).to.include(\"successfully added\")\r",
+							"\r",
+							"\t\t//pm.expect(responseJson.id).to.have.lengthOf(42);\r",
+							"}\r",
+							")\r",
+							"\r",
+							"\r",
+							"//Assertions validations - headers\r",
+							"pm.test(\"Headers, Cookies, and Response Time Validation\", function() {\r",
+							"    // Validate the presence of a specific header\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"\r",
+							"    // Validate the content of a specific header against a variable\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json;charset=UTF-8\");\r",
+							"\r",
+							"//\tCheck if text is there in \r",
+							"    // Check if cookies are present (example: \"session_id\" cookie)\r",
+							"    //var cookie = pm.cookies.get(\"session_id\");\r",
+							"    //pm.expect(cookie).to.not.be.undefined;\r",
+							"})\r",
+							"\r",
+							"//Store the response data in the collection variable\r",
+							"const Book_ID= jsondata.ID;\r",
+							"console.log(Book_ID);\r",
+							"pm.collectionVariables.set(\"bookiD\", Book_ID);\r",
+							"\r",
+							"//Validate the JSON Schema\r",
+							"const JSONSchema = {\r",
+							"  \"title\": \"Generated schema for Root\",\r",
+							"  \"type\": \"object\",\r",
+							"  \"properties\": {\r",
+							"    \"Msg\": {\r",
+							"      \"type\": \"string\"\r",
+							"    },\r",
+							"    \"ID\": {\r",
+							"      \"type\": \"string\"\r",
+							"    }\r",
+							"  },\r",
+							"  \"required\": [\r",
+							"    \"Msg\",\r",
+							"    \"ID\"\r",
+							"  ]\r",
+							"}\r",
+							"pm.test(\"Validate the JSON Response Schema\", function()\r",
+							"{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.have.jsonSchema(JSONSchema);\r",
+							"}\r",
+							")"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n\"name\":\"{{BookName}}\",\r\n\"isbn\":\"{{isbn}}\",\r\n\"aisle\":\"{{aisle}}\",\r\n\"author\":\"{{authorName}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rahulshettyacademy.com/Library/Addbook.php?ContentTypeOne=application/json;charset=UTF-8",
+					"protocol": "https",
+					"host": [
+						"rahulshettyacademy",
+						"com"
+					],
+					"path": [
+						"Library",
+						"Addbook.php"
+					],
+					"query": [
+						{
+							"key": "ContentTypeOne",
+							"value": "application/json;charset=UTF-8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ID\" : \"{{bookiD}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Base_Url}}/Library/DeleteBook.php",
+					"host": [
+						"{{Base_Url}}"
+					],
+					"path": [
+						"Library",
+						"DeleteBook.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsondata = pm.response.json();\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the Properties and Response Body\",Function(){\r",
+							"\r",
+							"    // Validate the propery key is there in the body\r",
+							"    pm.expect(jsondata).have.property(\"Msg\");\r",
+							"\r",
+							"    //Validate response text  \r",
+							"    pm.expect(jsondata.Msg).to.eql(\"successfully added\");\r",
+							"\r",
+							"    // Validate response text \r",
+							"\t\tpm.expect(pm.response.text()).to.include(\"successfully added\");\r",
+							"\r",
+							"    // Validate the content of a specific header against a variable\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json;charset=UTF-8\");  \r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://rahulshettyacademy.com/Library/Getbook.php?AuthorName=rahul",
+					"protocol": "https",
+					"host": [
+						"rahulshettyacademy",
+						"com"
+					],
+					"path": [
+						"Library",
+						"Getbook.php"
+					],
+					"query": [
+						{
+							"key": "AuthorName",
+							"value": "rahul"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "isbn",
+			"value": "4545",
+			"type": "string"
+		},
+		{
+			"key": "bookiD",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "authorName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "BookName",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "aisle",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
